@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  backend:
+    env_file:
+      - .env
+    image: "${DOCKER_IMAGE_BACKEND:-my_app_backend2}:${TAG:-latest}"
+    build:
+      context: ./backend
+      # dockerfile: Dockerfile.backend
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    env_file:
+      - .env
+    image: "${DOCKER_IMAGE_FRONTEND:-my_app_frontend2}:${TAG:-latest}"
+    build:
+      context: ./frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
