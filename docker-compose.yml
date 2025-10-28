@@ -60,7 +60,7 @@ services:
     build:
       context: ./frontend
     ports:
-      - "80:8010"
+      - "8080:8010"
     depends_on:
       - backend
 
