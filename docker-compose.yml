@@ -1,6 +1,22 @@
 version: "3.8"
 
 services:
+  db:
+    image: mysql:8.0
+    container_name: mysql-edge
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass123
+      MYSQL_DATABASE: edge
+      MYSQL_USER: edge_user
+      MYSQL_PASSWORD: edgepass123
+
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+
   backend:
     env_file:
       - .env
@@ -9,7 +25,21 @@ services:
       context: ./backend
       # dockerfile: Dockerfile.backend
     ports:
-      - "9000:9000"
+      - "8003:8003"
+    command:
+      [
+        "uv",
+        "run",
+        "uvicorn",
+        "main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8003",
+        "--reload",
+        "--reload-exclude",
+        "logs/*",
+      ]
     volumes:
       - ./backend:/app
 
@@ -20,6 +50,6 @@ services:
     build:
       context: ./frontend
     ports:
-      - "8080:8080"
+      - "80:8010"
     depends_on:
       - backend
