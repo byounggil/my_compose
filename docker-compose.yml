@@ -17,6 +17,16 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: unless-stopped
 
+  redis:
+    image: redis:7.2
+    container_name: redis-server
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    restart: unless-stopped
+
   backend:
     env_file:
       - .env
