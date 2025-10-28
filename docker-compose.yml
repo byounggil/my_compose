@@ -53,3 +53,6 @@ services:
       - "80:8010"
     depends_on:
       - backend
+
+volumes:
+  mysql_data:
